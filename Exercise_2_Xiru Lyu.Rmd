@@ -1,0 +1,231 @@
+---
+title: "Exercise_2_Xiru Lyu"
+author: "Xiru Lyu"
+date: "1/25/2018"
+output:
+  pdf_document: default
+---
+
+## Problem 1
+
+### Suppose 
+$$ A = \begin{bmatrix}
+1 & 1 & 3 \\ 
+5 & 2 & 6 \\ 
+-2 & -1  & -3 
+\end{bmatrix} $$
+
+### (a) Check that $A^{3}= 0$ where 0 is a 3×3 matrix with every entry equal to 0.
+```{r}
+A <- cbind(c(1,5,-2),c(1,2,-1),c(3,6,-3))
+A %*% A %*% A
+```
+
+### (b) Replace the third column of A by the sum of the second and third columns.
+```{r}
+x <- A[,2] + A[,3]
+A[,3] <- x
+A
+```
+
+## Problem 2
+
+### Create the following matrix B with 15 rows: 
+$$\begin{bmatrix}
+10 & -10 & 10 \\ 
+10 & -10 & 10 \\
+... & ... & ... \\
+10 & -10  & 10 
+\end{bmatrix}$$
+
+### Calculate the 3 × 3 matrix **B**$^{T}$**B**.
+
+```{r}
+B <- matrix(nrow=15,ncol=3)
+B[,1] <- 10; B[,2] <- -10; B[,3] <- 10
+t(B) %*% B
+```
+
+## Problem 3
+
+### Create a 6 × 6 matrix $\texttt{matE}$ with every entry equal to 0. Check what the functions row and col return when applied to $\texttt{matE}$. Hence create the 6 × 6 matrix:
+$$\begin{bmatrix}
+0 & 1 & 0 & 0 & 0 & 0 \\ 
+1 & 0 & 1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 & 0 & 1 \\
+0 & 0 & 0 & 0 & 1 & 0 
+\end{bmatrix}$$
+
+```{r}
+matE <- matrix(0,nrow=6,ncol=6)
+matE[abs(col(matE)-row(matE)) == 1] <- 1
+matE
+```
+
+
+## Problem 4
+
+### Create the following patterned matrix:
+$$\begin{bmatrix}
+0 & 1 & 2 & 3 & 4 \\ 
+1 & 2 & 3 & 4 & 5 \\
+2 & 3 & 4 & 5 & 6 \\
+3 & 4 & 5 & 6 & 7 \\
+4 & 5 & 6 & 7 & 8
+\end{bmatrix}$$
+
+```{r}
+outer(0:4,0:4,"+")
+```
+
+
+## Problem 5: Create the following patterned matrices
+
+### (a) 
+$$\begin{bmatrix}
+0 & 1 & 2 & 3 & 4 \\ 
+1 & 2 & 3 & 4 & 0 \\
+2 & 3 & 4 & 0 & 1 \\
+3 & 4 & 0 & 1 & 2 \\
+4 & 0 & 1 & 2 & 3
+\end{bmatrix}$$
+```{r}
+outer(0:4,0:4,"+") %% 5
+```
+
+### (b)
+$$\begin{bmatrix}
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ 
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 0 \\ 
+. & . & . & . & . & . & . & . & . & . \\ 
+. & . & . & . & . & . & . & . & . & . \\ 
+. & . & . & . & . & . & . & . & . & . \\ 
+8 & 9 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7  \\ 
+9 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8  
+\end{bmatrix}$$
+
+```{r}
+outer(0:9,0:9,"+") %% 10
+```
+
+### (c)
+$$\begin{bmatrix}
+0 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 \\ 
+1 & 0 & 8 & 7 & 6 & 5 & 4 & 3 & 2 \\ 
+2 & 1 & 0 & 8 & 7 & 6 & 5 & 4 & 3 \\ 
+3 & 2 & 1 & 0 & 8 & 7 & 6 & 5 & 4 \\ 
+4 & 3 & 2 & 1 & 0 & 8 & 7 & 6 & 5 \\ 
+5 & 4 & 3 & 2 & 1 & 0 & 8 & 7 & 6 \\
+6 & 5 & 4 & 3 & 2 & 1 & 0 & 8 & 7 \\
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 & 8 \\
+8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 
+\end{bmatrix}$$
+
+```{r}
+e <- outer(0:8,0:8,"+")
+f <- row(e) - col (e)
+for (i in 1:9){
+  for (j in 1:9){
+    if (f[i,j] < 0){
+      f[i,j] <- f[i,j] + nrow(f)
+    }}}
+f
+```
+
+
+## Problem 6: Solve the System
+```{r}
+m <- matrix(0,nrow=5,ncol=5)
+a <- abs(col(m)-row(m))+1
+b <- rbind(7,-1,-3,5,17)
+solve(a,b)
+```
+
+## Problem 7
+
+```{r}
+set.seed(75)
+aMat <- matrix( sample(10, size=60, replace=T), nr=6)
+```
+
+### (a) Find the number of entries in each row which are greater than 4.
+```{r}
+apply(aMat,1,function(x){sum(x>4)})
+```
+
+### (b) Which rows contain exactly two occurrences of the number seven?
+```{r}
+which(apply(aMat,1,function(x){sum(x==7)==2}))
+```
+
+### (c) Find those pairs of columns whose total (over both columns) is greater than 75.
+```{r}
+# Find sums for each column
+aMat_colsum <- apply(aMat,2,sum)
+
+# Find the outer product for the sum
+outer <- outer(aMat_colsum,aMat_colsum,"+")
+
+# Exclude cases when the value of the outer product is computed by the sum of the same column 
+for (i in 1:nrow(outer)) {
+  for (j in 1:ncol(outer)) {
+    if (i == j) {
+      outer[i,j] <- 0
+    }
+  }
+}
+
+# Find col numbers whose total is greater than 75
+which(outer>75,arr.ind=TRUE)
+```
+
+
+## Problem 8
+
+### (a) Calculate $\sum_{i=1}^{20}\sum_{j=1}^{5}\frac{i^4}{(3+j)}$
+```{r}
+# Create a matrix that contains all possible values with i varies between 1 
+# and 20, j varies between 1 and 5
+mat1 <- matrix(nrow=20,ncol=5)
+for (i in 1:nrow(mat1)){
+  for (j in 1:ncol(mat1)){
+    mat1[i,j] <- i^4/(3+j)
+  }
+}
+
+# Find the sum of all these values in the matrix mat1
+sum(mat1)
+```
+
+### (b) Calculate $\sum_{i=1}^{20}\sum_{j=1}^{5}\frac{i^4}{(3+ij)}$
+```{r}
+# Create a matrix that contains all possible values with i varies between 1 
+# and 20, j varies between 1 and 5
+mat2 <- matrix(nrow=20,ncol=5)
+for (i in 1:nrow(mat2)) {
+  for (j in 1:ncol(mat2)) {
+    mat2[i,j] <- i^4/(3+i*j)
+  }
+}
+
+# Find the sum of all these values in the matrix mat2
+sum(mat2)
+```
+
+### (c) Calculate $\sum_{i=1}^{10}\sum_{j=1}^{i}\frac{i^4}{(3+ij)}$
+```{r}
+# Create a matrix that contains all possible values with i varies between 1 
+# and 10, j varies between 1 and 10 (i)
+mat3 <- matrix(0,nrow=10,ncol=10)
+for (i in 1:nrow(mat3)) {
+  for (j in 1:i) {
+    mat3[i,j] <- i^4/(3+i*j)
+  }
+}
+
+# Find the sum all of these values in the matrix mat3
+sum(mat3)
+```
+
