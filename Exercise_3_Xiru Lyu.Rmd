@@ -224,7 +224,13 @@ $$x_{j}=x_{j-1}+\frac{2}{x_{j-1}}\quad\textrm{and}\;j=1,2,....$$
 
 ### Write a function $\texttt{testLoop}$ which takes the single argument *n* and returns the first *n* $-\;1$ values of the sequence {x$_{j}$}$_{j\geq0}$: that means the values of $x_{0},x_{1},x_{2},...,x_{n-2}$.
 ```{r}
-
+testLoop <- function(n) {
+  x <- rep(NA,n-1)
+  x[1] <- 1
+  x[2] <- 2
+  ifelse(x <= 2,x,for (i in 3:n-1) {x[i] <- x[i-1] + 2/x[i-1]})
+  x
+  }
 ```
 
 ### (b) Now write a funtoin $\texttt{testLoop2}$ which takes a single argument $\texttt{yVec}$ which is a vector. The function should return
@@ -232,7 +238,11 @@ $$\sum_{j=1}^{n}e^{j}$$
 
 ### where *n* is the length of $\texttt{yVec}$
 ```{r}
-
+testLoop2 <- function(yVec) {
+  n <- length(yVec)
+  seq <- 1:n
+  sum(exp(seq))
+}
 ```
 
 
@@ -240,25 +250,45 @@ $$\sum_{j=1}^{n}e^{j}$$
 
 ### (a) Write a function $\texttt{quadmap(start,rho,niter)}$ which returns the vector ($x_{1},...,x_{n}$) where $x_{k}=rx_{k-1}(1-x_{k-1})$
 ```{r}
-
+quadmap <- function(start,rho,niter) {
+  x <- rep(NA,niter)
+  x[1] <- start
+  for (i in 2:niter) {
+    x[i] <- rho*x[i-1]*(1-x[i-1])
+  }
+  x
+}
 ```
 
 ### Try out the function you have written
 ```{r}
+tmp <- quadmap(start=0.95, rho=2.99, niter=500)
 
-```
+# try the plot
+plot(tmp,type='l')
 
-### Try the plot
-```{r}
-
-```
-
-### Try another plot
-```{r}
-
+# try another plot
+plot(tmp[300:500], type="l")
 ```
 
 ### (b) Now write a function which determines the number of iterations needed to get $\left | x_{n}-x_{n-1} \right |<0.02$. So this function only has two arguments.
+```{r}
+quadmap2 <- function(start,rho){
+  x_1 <- start
+  niter <- 1
+  x_2 <- rho*x_1*(1-x_1)
+  while (abs(x_2-x_1) >= 0.02) {
+    x_1 <- x_2
+    x_2 <- rho*x_1*(1-x_1)
+    niter <- niter + 1
+  }
+  niter
+}
+
+# test the function
+# the function should return 84 for start=0.95, rho=2.99
+quadmap2(start=0.95,rho=2.99)
+```
 
 
 ## Problem 10
@@ -267,10 +297,57 @@ $$\sum_{j=1}^{n}e^{j}$$
 
 ### In particular, find $r_{1}$ and $r_{2}$ for the vector (2, 5, 8, . . . , 53, 56).
 ```{r}
+tmpFn <- function(xVec) {
+  xbar <- mean(xVec)
+  
+  # Calculate the value of the denominator
+  length_d <- seq(from=1, to=length(xVec))
+  denom <- sum((xVec[length_d]-xbar)^2)
+  
+  # Calculate the value of the numerator for r1
+  length_n_1 <- seq(from=2, to=length(xVec))
+  num_1 <- sum((xVec[length_n_1]-xbar)*(xVec[length_n_1-1]-xbar))
+  
+  # Calcalate the value of the nuerator for r2
+  length_n_2 <- seq(from=3, to=length(xVec))
+  num_2 <- sum((xVec[length_n_2]-xbar)*(xVec[length_n_2-2]-xbar))
+  
+  # Calculate the value of r1
+  r1 <- num_1/denom
+  
+  # Calculate the value of r2
+  r2 <- num_2/denom
+  
+  # Return the list with r1 and r2
+  r <- list(r1 = r1,r2 = r2)
+  r
+}
 
+# find r1 and r2 for the vector
+vec <- seq(from=2,to=56,by=3)
+tmpFn(vec)
 ```
 
 
 ### (b) Generalise the function so that it takes two arguments: the vector $\texttt{xVec}$ and an integer $\texttt{k}$ which lines between 1 and *n* $-\;1$ where *n* is the length of $\texttt{xVec}$.
 
 ### The function should return a vector of the values ($r_{0} = 1,r_{1},...,r_{k}$).
+```{r}
+tmpFn_2 <- function(xVec,k) {
+  tmp <- function(j) {
+    xbar <- mean(xVec)
+  
+    # Calculate the value of the denominator
+    length_d <- seq(from=1, to=length(xVec))
+    denom <- sum((xVec[length_d]-xbar)^2)
+    
+    # Calculate the value of the numerator
+    length_n <- seq(from=j+1, to=length(xVec))
+    num_1 <- sum((xVec[length_n]-xbar)*(xVec[length_n-j]-xbar))
+  
+    r <- num_1/denom }
+  list <- c(1,sapply(1:k,tmp))
+  list
+}
+```
+
