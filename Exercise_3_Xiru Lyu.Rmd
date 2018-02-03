@@ -12,19 +12,22 @@ output: pdf_document
 ```{r}
 tmpFn1 <- function(xVec) {
   for (i in 1:length(xVec)) {
-    xVec[i] <- xVec[i]^2
+    xVec[i] <- xVec[i]^i
   }
+  xVec
+}
+
+tmpFn2 <- function(xVec) {
+  for (i in 1:length(xVec)){
+    xVec[i] <- xVec[i]^i/i}
   xVec
 }
 ```
 
 ### (b) Now write a function $\texttt{tmpFn3}$ which takes 2 arguments $\texttt{x}$ and $\texttt{n}$ where $\texttt{x}$ is a single number and $\texttt{n}$ is a strictly positive integer. The function should return the value of $$1+\frac{x}{1}+\frac{x^{2}}{2}+\frac{x^{3}}{3}+...+\frac{x^{n}}{n}$$
 ```{r}
-tmpFn2 <- function(xVec) {
-  for (i in 1:length(xVec)) {
-    xVec[i] <- xVec[i]^2/i
-  }
-  xVec
+tmpFn2 <- function(x,n) {
+sum(x^(1:n)/(1:n)) + 1
 }
 ```
 
@@ -62,7 +65,7 @@ tmpFn <- function(xVec){
   } else if (xVec < 2) {
     xVec+3
   } else {
-    xVec^2+xVec-7
+    xVec^2+4*xVec-7
   }
 }
 ```
@@ -95,17 +98,8 @@ $$\begin{bmatrix}
 
 ```{r}
 fun1 <- function(matrix) {
-  # create a new matrix that is a copy of the input matrix
-  new_matrix <- matrix
-  
-  for (i in 1:nrow(matrix)) {
-    for (j in 1:ncol(matrix)) {
-      if (matrix[i,j] %% 2 == 1) {
-        new_matrix[i,j] <- 2*new_matrix[i,j]
-      }
-    }
-  }
-  new_matrix
+  matrix[matrix%%2==1] <- 2*matrix[matrix%%2==1]
+  matrix
 }
 ```
 
@@ -228,8 +222,13 @@ testLoop <- function(n) {
   x <- rep(NA,n-1)
   x[1] <- 1
   x[2] <- 2
-  ifelse(x <= 2,x,for (i in 3:n-1) {x[i] <- x[i-1] + 2/x[i-1]})
-  x
+  if (n-1==2) {
+    x
+  }
+  else {
+  for (i in 3:n-1) 
+    {x[i] <- x[i-1] + 2/x[i-1]} 
+  x }
   }
 ```
 
@@ -298,25 +297,18 @@ quadmap2(start=0.95,rho=2.99)
 ### In particular, find $r_{1}$ and $r_{2}$ for the vector (2, 5, 8, . . . , 53, 56).
 ```{r}
 tmpFn <- function(xVec) {
-  xbar <- mean(xVec)
   
-  # Calculate the value of the denominator
-  length_d <- seq(from=1, to=length(xVec))
-  denom <- sum((xVec[length_d]-xbar)^2)
+  # calculate the value of r1
+  i <- 1:length(xVec)
+  i_1 <- 2:length(xVec)
+  num_1 <- sum((xVec[i_1]-mean(xVec))*(xVec[i_1-1]-mean(xVec))) # find the numerator
+  denom <- sum((xVec[i]-mean(xVec))^2) # find the denominator
+  r1 <- num_1/denom # compute r1
   
-  # Calculate the value of the numerator for r1
-  length_n_1 <- seq(from=2, to=length(xVec))
-  num_1 <- sum((xVec[length_n_1]-xbar)*(xVec[length_n_1-1]-xbar))
-  
-  # Calcalate the value of the nuerator for r2
-  length_n_2 <- seq(from=3, to=length(xVec))
-  num_2 <- sum((xVec[length_n_2]-xbar)*(xVec[length_n_2-2]-xbar))
-  
-  # Calculate the value of r1
-  r1 <- num_1/denom
-  
-  # Calculate the value of r2
-  r2 <- num_2/denom
+  # calculate the value of r2
+  i_2 <- 3:length(xVec)
+  num_2 <- sum((xVec[i_2]-mean(xVec))*(xVec[i_2-2]-mean(xVec))) # find the numerator
+  r2 <- num_2/denom # compute r2
   
   # Return the list with r1 and r2
   r <- list(r1 = r1,r2 = r2)
@@ -334,7 +326,8 @@ tmpFn(vec)
 ### The function should return a vector of the values ($r_{0} = 1,r_{1},...,r_{k}$).
 ```{r}
 tmpFn_2 <- function(xVec,k) {
-  tmp <- function(j) {
+  # Write a function that generates the value for each k
+  tmp <- function(k) {
     xbar <- mean(xVec)
   
     # Calculate the value of the denominator
@@ -342,10 +335,11 @@ tmpFn_2 <- function(xVec,k) {
     denom <- sum((xVec[length_d]-xbar)^2)
     
     # Calculate the value of the numerator
-    length_n <- seq(from=j+1, to=length(xVec))
-    num_1 <- sum((xVec[length_n]-xbar)*(xVec[length_n-j]-xbar))
+    length_n <- seq(from=k+1, to=length(xVec))
+    num_1 <- sum((xVec[length_n]-xbar)*(xVec[length_n-k]-xbar))
   
     r <- num_1/denom }
+  
   list <- c(1,sapply(1:k,tmp))
   list
 }

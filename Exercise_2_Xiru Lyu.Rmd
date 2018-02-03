@@ -197,6 +197,10 @@ for (i in 1:nrow(mat1)){
 
 # Find the sum of all these values in the matrix mat1
 sum(mat1)
+
+# OR
+
+sum((1:20)^4) * sum(1/(4:8))
 ```
 
 ### (b) Calculate $\sum_{i=1}^{20}\sum_{j=1}^{5}\frac{i^4}{(3+ij)}$
@@ -212,6 +216,13 @@ for (i in 1:nrow(mat2)) {
 
 # Find the sum of all these values in the matrix mat2
 sum(mat2)
+
+# OR
+i <- seq(from=1,to=20)
+j <- seq(from=1,to=5)
+num <- 1/(outer(i,j,"*")+3)   # find the numerator
+denom <- matrix(i^4,nrow=1,byrow=FALSE)  # find the denominator
+sum(denom %*% num)
 ```
 
 ### (c) Calculate $\sum_{i=1}^{10}\sum_{j=1}^{i}\frac{i^4}{(3+ij)}$
@@ -227,5 +238,19 @@ for (i in 1:nrow(mat3)) {
 
 # Find the sum all of these values in the matrix mat3
 sum(mat3)
+
+# OR
+
+i <- seq(from=1,to=10)
+j <- seq(from=1,to=10)
+
+# write a function that would compute the product of i and j only if i >= j
+func <- function(i,j) {
+  ifelse(i>=j,1/(i*j+3),0)
+}  
+
+denom <- outer(i,j,func) # find the denominator
+num <- matrix(i^4,nrow=1,byrow=FALSE) # find the numerator
+sum(num%*%denom)
 ```
 
